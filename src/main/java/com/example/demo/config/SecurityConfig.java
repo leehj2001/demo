@@ -25,7 +25,12 @@ http
 .loginPage("/login")
 .defaultSuccessUrl("/")
 .failureUrl("/login?error")
-.permitAll());
+.permitAll())
+.logout(logout -> logout // 3. 로그아웃 설정
+.logoutUrl("/logout") // 로그아웃 처리 URL (POST)
+.logoutSuccessUrl("/login?logout") // 로그아웃 후 이동
+.invalidateHttpSession(true) // 세션 삭제
+.deleteCookies("JSESSIONID", "remember-me")); // 쿠키 삭제
 return http.build();
 }
 }
