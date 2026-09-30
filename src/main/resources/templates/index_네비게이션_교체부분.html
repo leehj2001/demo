@@ -1,0 +1,60 @@
+<!--
+  [5주차 제공] 내 포트폴리오 index.html 에 로그인/로그아웃 버튼 추가하기
+  (index.html 을 직접 꾸민 학생은 전체 덮어쓰기 대신 아래 ①~④ 만 수정하세요.)
+-->
+
+<!-- ① 2번째 줄 <html> 태그 교체 : sec 네임스페이스 추가 -->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+<!-- ② </head> 바로 위에 추가 -->
+        <!-- [5주차] 네비게이션 로그인 사용자 표시 스타일 -->
+        <style>
+            .navbar-user { color: var(--white-color); font-size: var(--p-font-size); white-space: nowrap; }
+            .navbar.is-sticky .navbar-user { color: var(--dark-color); }
+            a.navbar-icon:hover { background: var(--secondary-color); color: var(--white-color); }
+        </style>
+
+
+<!-- ③ 모바일용 전화번호 버튼(<div class="d-flex align-items-center d-lg-none"> ... </div>) 교체 -->
+                <!-- [5주차] 모바일 화면 : 로그인 / 로그아웃 버튼 -->
+                <div class="d-flex align-items-center d-lg-none">
+                    <a sec:authorize="isAnonymous()" class="custom-btn btn" th:href="@{/login}">
+                        <i class="bi-box-arrow-in-right me-1"></i>로그인
+                    </a>
+                    <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" class="m-0">
+                        <button type="submit" class="custom-btn btn">
+                            <i class="bi-box-arrow-right me-1"></i>로그아웃
+                        </button>
+                    </form>
+                </div>
+
+
+<!-- ④ 메뉴 마지막 <li>(연락처) 아래 ~ PC용 전화번호 버튼(<div class="d-lg-flex ... ms-auto"> ... </div>) 교체 -->
+                        <!-- [5주차] 회원 전용 페이지 : 로그인하지 않으면 로그인 화면으로 이동 -->
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/testdb}">회원목록</a>
+                        </li>
+                    </ul>
+
+                    <!-- [5주차] PC 화면 : 로그인 상태에 따라 버튼 전환 (sec:authorize) -->
+                    <div class="d-lg-flex align-items-center d-none ms-auto">
+                        <!-- 로그인 전 : 로그인 / 회원가입 -->
+                        <th:block sec:authorize="isAnonymous()">
+                            <a class="navbar-icon bi-person-plus me-3 text-center" th:href="@{/signup}" title="회원가입"></a>
+                            <a class="custom-btn btn" th:href="@{/login}">
+                                <i class="bi-box-arrow-in-right me-1"></i>로그인
+                            </a>
+                        </th:block>
+
+                        <!-- 로그인 후 : 사용자 아이디 + 로그아웃 (CSRF 때문에 POST 폼으로 전송) -->
+                        <th:block sec:authorize="isAuthenticated()">
+                            <i class="navbar-icon bi-person-circle me-2 text-center"></i>
+                            <span class="navbar-user me-3"><strong sec:authentication="name">user</strong>님</span>
+                            <form th:action="@{/logout}" method="post" class="m-0">
+                                <button type="submit" class="custom-btn btn">
+                                    <i class="bi-box-arrow-right me-1"></i>로그아웃
+                                </button>
+                            </form>
+                        </th:block>
+                    </div>
