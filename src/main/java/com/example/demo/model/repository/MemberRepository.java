@@ -10,3 +10,4 @@ Optional<Member> findByUsername(String username);
 // 아이디 중복 확인 (존재하면 true)
 boolean existsByUsername(String username);
 }
+
