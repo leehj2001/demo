@@ -1,6 +1,7 @@
 package com.example.demo.model.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -12,54 +13,57 @@ import com.example.demo.model.dto.MemberForm;
 import com.example.demo.model.repository.MemberRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-
-
 @Service // 서비스 등록
 public class MemberService implements UserDetailsService  {
 @Autowired
 private MemberRepository memberRepository;
 @Autowired // SecurityConfig 에 등록한 BCryptPasswordEncoder 주입
 private PasswordEncoder passwordEncoder;
-
 private static final List<String> ROLES = List.of("USER", "ADMIN");
+private boolean isBlank(String value) { return value == null || value.isBlank(); } // 클래스 아래쪽
+
 
 public Member signup(MemberForm form) { // 회원가입
-if (memberRepository.existsByUsername(form.getUsername())) {
-throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
-}
-Member member = new Member();
-member.setUsername(form.getUsername());
-member.setPassword(passwordEncoder.encode(form.getPassword())); // ★ 암호화
-member.setName(form.getName());
-member.setRole("USER"); // 기본 권한
-return memberRepository.save(member); // INSERT
+    if (isBlank(form.getUsername()) || isBlank(form.getPassword()) || isBlank(form.getName())) {
+    throw new IllegalArgumentException("아이디, 비밀번호, 이름은 필수입니다.");
+    }
+
+    if (memberRepository.existsByUsername(form.getUsername())) {
+    throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
+    }
+    Member member = new Member();
+    member.setUsername(form.getUsername());
+    member.setPassword(passwordEncoder.encode(form.getPassword())); // ★ 암호화
+    member.setName(form.getName());
+    member.setRole("USER"); // 기본 권한
+    return memberRepository.save(member); // INSERT
 }
 @Override // 로그인 시 시큐리티가 자동 호출
-public UserDetails loadUserByUsername(String username)
-throws UsernameNotFoundException {
-Member member = memberRepository.findByUsername(username)
-.orElseThrow(() -> new UsernameNotFoundException("회원 없음 : " + username));
-return User.builder() // 시큐리티용 사용자 객체로 변환
-.username(member.getUsername())
-.password(member.getPassword()) // 암호화 값 → matches()로 비교
-.roles(member.getRole()) // USER → ROLE_USER
-.build();
+    public UserDetails loadUserByUsername(String username)
+    throws UsernameNotFoundException {
+    Member member = memberRepository.findByUsername(username)
+    .orElseThrow(() -> new UsernameNotFoundException("회원 없음 : " + username));
+    return User.builder() // 시큐리티용 사용자 객체로 변환
+    .username(member.getUsername())
+    .password(member.getPassword()) // 암호화 값 → matches()로 비교
+    .roles(member.getRole()) // USER → ROLE_USER
+    .build();
 }
 
 // MemberService : 로그인한 아이디로 회원 조회
 public Member findByUsername(String username) {
-return memberRepository.findByUsername(username)
-.orElseThrow(() -> new IllegalArgumentException(
-"회원이 존재하지 않습니다 : " + username));
+    return memberRepository.findByUsername(username)
+    .orElseThrow(() -> new IllegalArgumentException(
+    "회원이 존재하지 않습니다 : " + username));
 }
 
 public List<Member> findAll() { // MemberService : 전체 회원 (id 순서)
-return memberRepository.findAll(Sort.by("id"));
-}
-@PreAuthorize("hasRole('ADMIN')")
-public void changeRole(Long id, String role) { // 권한 변경
-if (!ROLES.contains(role)) { // 허용된 권한만
-throw new IllegalArgumentException("허용되지 않는 권한입니다 : " + role);
+    return memberRepository.findAll(Sort.by("id"));
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    public void changeRole(Long id, String role) { // 권한 변경
+    if (!ROLES.contains(role)) { // 허용된 권한만
+    throw new IllegalArgumentException("허용되지 않는 권한입니다 : " + role);
 }
 Member member = memberRepository.findById(id)
 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
@@ -69,9 +73,13 @@ memberRepository.save(member); // UPDATE (id 가 있으면 수정)
 
 @PreAuthorize("hasRole('ADMIN')")
 public void deleteMember(Long id) { // 회원 삭제
-Member member = memberRepository.findById(id)
-.orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+    Member member = memberRepository.findById(id)
+    .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 memberRepository.delete(member); // DELETE
+}
+
+public Optional<Member> findById(Long id) {
+    return memberRepository.findById(id);
 }
 
 }
