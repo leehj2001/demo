@@ -126,6 +126,11 @@ https://templatemo.com/tm-578-first-portfolio
                             <a class="nav-link nav-link-admin" th:href="@{/admin/members}"><i class="bi-shield-lock me-1"></i>관리자</a>
                         </li>
 
+                        <!-- [추가 도전] 회원목록 메뉴도 USER에게 숨기기 : ADMIN, MANAGER만 표시 -->
+                        <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                            <a class="nav-link" th:href="@{/testdb}">회원목록</a>
+                        </li>
+
                     </ul>
 
                     <!-- [5주차] PC 화면 : 로그인 상태에 따라 버튼 전환 (sec:authorize) -->
