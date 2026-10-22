@@ -5,7 +5,7 @@
 추가실습 : URL 맵핑 및 컨트롤러 추가
 
 <div align="center">
-    <img src="demo\screenshot\1.png" width="80%" alt="HELLO">
+    <img src="./demo/screenshot/1.png" width="80%" alt="HELLO">
 </div>
 <br>
 
@@ -15,12 +15,12 @@
 기술/경험 페이지에 세부페이지를 각각 제작하였습니다.
 
 <div align="center">
-    <img src="demo\screenshot\2.png" width="80%" alt="포트폴리오 작성">
+    <img src="./demo/screenshot/2.png" width="80%" alt="포트폴리오 작성">
 </div>
 <br>
 
 <div align="center">
-    <img src="demo\screenshot\2-1.png" width="80%" alt="세부페이지">
+    <img src="./demo/screenshot/2-1.png" width="80%" alt="세부페이지">
 </div>
 <br>
 
@@ -29,12 +29,12 @@
 추가실습 : 사용자 정보 수정 및 뷰 수정 성공!
 
 <div align="center">
-    <img src="demo\screenshot\3.png" width="80%" alt="프로필 수정">
+    <img src="./demo/screenshot/3.png" width="80%" alt="프로필 수정">
 </div>
 <br>
 
 <div align="center">
-    <img src="demo\screenshot\4.png" width="80%" alt="뷰 수정">
+    <img src="./demo/screenshot/4.png" width="80%" alt="뷰 수정">
 </div>
 <br>
 
@@ -43,22 +43,22 @@
 추가실습 : 로그인 상태 유지, 비밀번호 검증 구현!
 
 <div align="center">
-    <img src="demo\screenshot\5.png" width="80%" alt="로그인 구현">
+    <img src="./demo/screenshot/5.png" width="80%" alt="로그인 구현">
 </div>
 <br>
 
 <div align="center">
-    <img src="demo\screenshot\6.png" width="80%" alt="로그인 상태 유지">
+    <img src="./demo/screenshot/6.png" width="80%" alt="로그인 상태 유지">
 </div>
 <br>
 
 <div align="center">
-    <img src="demo\screenshot\7.png" width="80%" alt="비밀번호 확인 검증">
+    <img src="./demo/screenshot/7.png" width="80%" alt="비밀번호 확인 검증">
 </div>
 <br>
 
 <div align="center">
-    <img src="demo\screenshot\8.png" width="80%" alt="DB에 저장안됨">
+    <img src="./demo/screenshot/8.png" width="80%" alt="DB에 저장안됨">
 </div>
 <br>
 
@@ -67,17 +67,17 @@
 추가실습 : 관리자 보호 및 매니저 권한 추가 성공!
 
 <div align="center">
-    <img src="demo\screenshot\9.png" width="80%" alt="관리자 페이지 분리 및 관리자 보호">
+    <img src="./demo/screenshot/9.png" width="80%" alt="관리자 페이지 분리 및 관리자 보호">
 </div>
 <br>
 
 <div align="center">
-    <img src="demo\screenshot\10.png" width="80%" alt="매니저 권한 추가">
+    <img src="./demo/screenshot/10.png" width="80%" alt="매니저 권한 추가">
 </div>
 <br>
 
 <div align="center">
-    <img src="demo\screenshot\11.png" width="80%" alt="관리자 페이지 접근 제어">
+    <img src="./demo/screenshot/11.png" width="80%" alt="관리자 페이지 접근 제어">
 </div>
 <br>
 
@@ -87,16 +87,16 @@
 추가실습 : 오류처리 한곳에 모으기 성공!
 
 <div align="center">
-    <img src="demo\screenshot\12.png" width="80%" alt="회원검색 API">
+    <img src="./demo/screenshot/12.png" width="80%" alt="회원검색 API">
 </div>
 <br>
 
 <div align="center">
-    <img src="demo\screenshot\13.png" width="80%" alt="오류처리 한곳 모으기">
+    <img src="./demo/screenshot/13.png" width="80%" alt="오류처리 한곳 모으기">
 </div>
 <br>
 
 <div align="center">
-    <img src="demo\screenshot\14.png" width="80%" alt="오류처리 한곳 모으기">
+    <img src="./demo/screenshot/14.png" width="80%" alt="오류처리 한곳 모으기">
 </div>
 <br>
