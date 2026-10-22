@@ -38,4 +38,24 @@ public class DemoController {
         System.out.println("데이터 출력 디버그 : " + test);
         return "testdb";
     }
+
+    @GetMapping("/detailed")
+    public String detailed() {
+        return "detailed"; // templates/detailed.html 반환
+    }
+
+    @GetMapping("/detailed2")
+    public String detailed2() {
+        return "detailed2"; // templates/detailed2.html 반환
+    }
+
+    @GetMapping("/detailed3")
+    public String detailed3() {
+        return "detailed3"; // templates/detailed3.html 반환
+    }
+
+    @GetMapping("/detailed4")
+    public String detailed4() {
+        return "detailed4"; // templates/detailed4.html 반환
+    }
 }
