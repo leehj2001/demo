@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .requestMatchers("/", "/hello", "/hello2", "/detailed_web.html",
                                  "/login", "/signup", "/error").permitAll()
                 .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**").permitAll()
+                .requestMatchers("/board", "/board/{id:\\d+}").permitAll() // 게시판 목록·상세 : 누구나
                 // 요구사항 2: /testdb는 ADMIN, MANAGER만 허용 (USER 접근 시 403)
                 .requestMatchers("/testdb").hasAnyRole("ADMIN", "MANAGER")
                 .requestMatchers("/admin/**", "/api/admin/**").hasRole("ADMIN")
