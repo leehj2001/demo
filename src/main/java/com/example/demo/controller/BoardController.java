@@ -9,18 +9,42 @@ import org.springframework.web.bind.annotation.*;
 import com.example.demo.model.domain.Post;
 import com.example.demo.model.dto.PostForm;
 import com.example.demo.model.service.PostService;
+import com.example.demo.model.service.CommentService;
+
+import org.springframework.data.domain.Page;
+
 
 @Controller // 게시판 화면 컨트롤러
 @RequestMapping("/board") // 모든 URL 앞에 /board
 public class BoardController {
     @Autowired
     PostService postService;
-    @GetMapping // 목록 : GET /board (누구나)
-    public String list(Model model) {
-        List<Post> posts = postService.findAll();
-        model.addAttribute("posts", posts);
+    @Autowired // ① 필드 추가 (postService 아래)
+    CommentService commentService;
+    
+
+    @GetMapping // 목록 : GET /board?page=0&keyword=스프링&type=all (누구나)
+    public String list(@RequestParam(defaultValue = "0") int page,
+                       @RequestParam(required = false) String keyword,
+                       @RequestParam(defaultValue = "all") String type, Model model) {
+        Page<Post> posts = postService.findPage(keyword, type, page);
+        model.addAttribute("posts", posts.getContent());
+        model.addAttribute("page", posts);
+        model.addAttribute("keyword", keyword); // 검색창에 검색어 유지, 페이지 링크에도 붙인다
+        model.addAttribute("type", type); // 검색 범위 선택 상자 표시 + 페이지 링크에 type 유지
         return "board/list";
     }
+
+    @GetMapping("/my") // 내가 쓴 글 : GET /board/my (로그인 필요)
+    public String myPosts(@RequestParam(defaultValue = "0") int page, Principal principal, Model model) {
+        Page<Post> posts = postService.findMyPage(principal.getName(), page);
+        model.addAttribute("posts", posts.getContent());
+        model.addAttribute("page", posts);
+        model.addAttribute("listTitle", "내가 쓴 글"); // 제목 변경 + 검색창 숨김
+        model.addAttribute("pageUrl", "/board/my"); // 페이지 번호 링크도 /board/my 로
+        return "board/list";
+    }
+
     @GetMapping("/write") // 글쓰기 화면 : GET /board/write (로그인 필요)
     public String writeForm() {
         return "board/form";
@@ -37,8 +61,9 @@ public class BoardController {
     }
     @GetMapping("/{id}") // 상세 : GET /board/3 (누구나)
     public String detail(@PathVariable Long id, Model model) {
-        Post post = postService.findById(id);
+        Post post = postService.read(id); // 조회수 1 증가 후 글 가져오기
         model.addAttribute("post", post);
+        model.addAttribute("comments", commentService.findByPost(post)); // ② 댓글 목록 → 화면에 댓글 영역
         return "board/detail";
     }
 

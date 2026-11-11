@@ -3,6 +3,8 @@ package com.example.demo.model.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -23,8 +25,29 @@ public class PostService {
     private PostRepository postRepository;
     @Autowired
     private MemberRepository memberRepository;
+    public static final int PAGE_SIZE = 10; // 한 페이지에 보여 줄 글 수
+
     public List<Post> findAll() { // 전체 목록 (최신 글이 위로)
         return postRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+    }
+
+    // [10주차] 단계 2 : 페이지 목록 + 검색 (검색어가 없으면 전체)
+    // [10주차 연습문제 2] type : "all"(제목+내용) / "writer"(작성자)
+    public Page<Post> findPage(String keyword, String type, int page) {
+        PageRequest pageable = PageRequest.of(Math.max(page, 0), PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
+        if (keyword == null || keyword.isBlank()) { // 앞이 true면 뒤를 실행하지 않음
+            return postRepository.findAll(pageable);
+        }
+        if ("writer".equals(type)) {
+            return postRepository.searchByWriter(keyword.trim(), pageable); // 작성자 이름으로 검색
+        }
+        return postRepository.search(keyword.trim(), pageable); // 검색 결과도 10개씩
+    }
+
+    // 내가 쓴 글 : 로그인한 회원의 글만 페이지 단위로
+    public Page<Post> findMyPage(String username, int page) {
+        PageRequest pageable = PageRequest.of(Math.max(page, 0), PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
+        return postRepository.findByAuthor_Username(username, pageable);
     }
     public Post write(PostForm form, String username) { // 글쓰기 (작성자 = 로그인한 회원)
         validate(form);
@@ -36,6 +59,12 @@ public class PostService {
         post.setAuthor(author); // 작성자는 화면이 아니라 서버가 정한다
         post.setCreatedAt(LocalDateTime.now());
         return postRepository.save(post); // INSERT
+    }
+
+    public Post read(Long id) { // 상세 화면용 : 글을 열 때마다 조회수 1 증가
+        Post post = findById(id);
+        post.setViewCount(post.getViewCount() + 1);
+        return postRepository.save(post); // UPDATE
     }
 
     public Post findById(Long id) { // 글 1개 (없으면 404 → templates/error/404.html)

@@ -11,16 +11,23 @@ import org.springframework.stereotype.Service;
 import com.example.demo.model.domain.Member;
 import com.example.demo.model.dto.MemberForm;
 import com.example.demo.model.repository.MemberRepository;
+import com.example.demo.model.repository.PostRepository;
+import com.example.demo.model.repository.CommentRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Service
 public class MemberService implements UserDetailsService {
 
     @Autowired
     private MemberRepository memberRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired // ① 필드 추가
+    private PostRepository postRepository;
+    @Autowired
+    private CommentRepository commentRepository;
+
 
     private static final List<String> ROLES = List.of("USER", "MANAGER", "ADMIN");
 
@@ -89,10 +96,21 @@ public class MemberService implements UserDetailsService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public void deleteMember(Long id) {
+    public void deleteMember(Long id) { // 회원 삭제
         Member member = memberRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
-        memberRepository.delete(member);
+            .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+        checkNotMe(member); // [6주차 연습문제 1]
+        if (postRepository.existsByAuthor(member) || commentRepository.existsByAuthor(member)) {
+            throw new IllegalArgumentException("작성한 글이나 댓글이 있는 회원은 삭제할 수 없습니다.");
+        }
+        memberRepository.delete(member); // DELETE
+    }
+
+    private void checkNotMe(Member member) { // [6주차 연습문제 1] 로그인한 본인은 삭제 불가
+        String loginUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (member.getUsername().equals(loginUsername)) {
+            throw new IllegalArgumentException("자기 자신은 삭제할 수 없습니다.");
+        }
     }
 
     public Optional<Member> findById(Long id) {
