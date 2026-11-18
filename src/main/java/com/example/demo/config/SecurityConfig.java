@@ -31,6 +31,7 @@ public class SecurityConfig {
                                  "/login", "/signup", "/error").permitAll()
                 .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**").permitAll()
                 .requestMatchers("/board", "/board/{id:\\d+}").permitAll() // 게시판 목록·상세 : 누구나
+                .requestMatchers("/uploads/**").permitAll() // [11주차] 포스터 이미지 : 누구나 (올리기는 글쓰기라서 로그인)
                 // 요구사항 2: /testdb는 ADMIN, MANAGER만 허용 (USER 접근 시 403)
                 .requestMatchers("/testdb").hasAnyRole("ADMIN", "MANAGER")
                 .requestMatchers("/admin/**", "/api/admin/**").hasRole("ADMIN")

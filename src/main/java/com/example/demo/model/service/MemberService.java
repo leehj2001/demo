@@ -13,6 +13,7 @@ import com.example.demo.model.dto.MemberForm;
 import com.example.demo.model.repository.MemberRepository;
 import com.example.demo.model.repository.PostRepository;
 import com.example.demo.model.repository.CommentRepository;
+import com.example.demo.model.repository.EnrollmentRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -27,6 +28,8 @@ public class MemberService implements UserDetailsService {
     private PostRepository postRepository;
     @Autowired
     private CommentRepository commentRepository;
+    @Autowired
+    private EnrollmentRepository enrollmentRepository;
 
 
     private static final List<String> ROLES = List.of("USER", "MANAGER", "ADMIN");
@@ -102,6 +105,9 @@ public class MemberService implements UserDetailsService {
         checkNotMe(member); // [6주차 연습문제 1]
         if (postRepository.existsByAuthor(member) || commentRepository.existsByAuthor(member)) {
             throw new IllegalArgumentException("작성한 글이나 댓글이 있는 회원은 삭제할 수 없습니다.");
+        }
+        if (enrollmentRepository.existsByMember(member)) { // [연습문제 2] 신청 내역이 있는 회원은 삭제 불가
+            throw new IllegalArgumentException("신청 내역이 있는 회원은 삭제할 수 없습니다.");
         }
         memberRepository.delete(member); // DELETE
     }

@@ -25,6 +25,7 @@ Spring Boot로 개인 포트폴리오 사이트를 만들고, 주차별로 DB �
 | 7주차 | REST API | 회원 관리 API, 검색 API, 오류 처리 통합 |
 | 9주차 | 게시판 | 글 CRUD, 조회수, 내가 쓴 글 |
 | 10주차 | 게시판 고도화 | 페이징, 검색, 댓글, 회원 삭제 보호 |
+| 11주차 | 파일 업로드 · 신청 바구니 · 트랜잭션 | 모집글, 포스터 업로드, 세션 바구니, 신청 확정(@Transactional) / 추가문제 : 신청 취소, 삭제 정리 |
 
 ---
 
@@ -207,5 +208,48 @@ JPA로 MySQL의 `testdb` 테이블과 연결하고, 저장된 데이터를 웹 �
 <div align="center">
     <img src="./screenshot/20.png" width="80%" alt="내가 쓴 글 페이징">
     <p><em>내가 쓴 글 페이징 — 106개의 글을 10개씩 나눠서 표시</em></p>
+</div>
+<br>
+
+## 11주차 · 파일 업로드 + 신청 바구니 + 트랜잭션
+
+- **실습** : 게시글을 모집글(정원 · 남은 자리)로 확장, 포스터 이미지 업로드, 세션 신청 바구니, 신청 확정
+- **추가문제** : 신청 취소(인원 - 1), 신청자가 있는 모집글 · 신청 내역이 있는 회원 삭제 방지, 글 삭제 시 포스터 파일 삭제
+
+신청 확정은 `@Transactional` 로 한 묶음 처리해, 바구니의 모집글 중 하나라도 정원이 마감되면 앞에서 처리한 신청도 모두 취소(롤백)됩니다. 업로드한 파일은 `uploads/` 에 저장하며 `.gitignore` 로 제외했습니다.
+
+<div align="center">
+    <img src="./screenshot/21.png" width="40%" alt="모집 인원 오류">
+    <p><em>모집 인원을 0으로 입력하면 서버가 막고 오류 메시지 표시</em></p>
+</div>
+<br>
+
+<div align="center">
+    <img src="./screenshot/22.png" width="50%" alt="모집글 상세">
+    <p><em>포스터가 붙은 모집글 상세 — 정원 · 신청 · 남은 자리와 바구니 담기 버튼</em></p>
+</div>
+<br>
+
+<div align="center">
+    <img src="./screenshot/23.png" width="80%" alt="신청 바구니">
+    <p><em>세션에 담긴 모집글 2개를 보여 주는 신청 바구니</em></p>
+</div>
+<br>
+
+<div align="center">
+    <img src="./screenshot/24.png" width="80%" alt="정원 마감 롤백">
+    <p><em>정원이 마감된 모집글이 있으면 신청 확정이 실패하고, 신청 내역에는 아무것도 저장되지 않음 (@Transactional 롤백)</em></p>
+</div>
+<br>
+
+<div align="center">
+    <img src="./screenshot/25.png" width="80%" alt="신청 취소">
+    <p><em>[추가문제] 신청 취소 — "신청이 취소되었습니다." 안내와 함께 신청 내역에서 삭제</em></p>
+</div>
+<br>
+
+<div align="center">
+    <img src="./screenshot/26.png" width="80%" alt="모집글 삭제 방지">
+    <p><em>[추가문제] 삭제 정리 — 신청자가 있는 모집글은 삭제할 수 없음</em></p>
 </div>
 <br>
