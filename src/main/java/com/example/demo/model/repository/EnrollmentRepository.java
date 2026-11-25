@@ -3,6 +3,8 @@ package com.example.demo.model.repository;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import com.example.demo.model.dto.SeatMessage;
 import com.example.demo.model.domain.Enrollment;
 import com.example.demo.model.domain.Member;
 import com.example.demo.model.domain.Post;
